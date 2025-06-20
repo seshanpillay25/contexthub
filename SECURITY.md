@@ -201,7 +201,6 @@ npm run test:permissions
 Instead, please use one of these methods:
 
 1. **GitHub Security Advisories** (Preferred): [Report a vulnerability](https://github.com/seshanpillay25/contexthub/security/advisories/new)
-2. **Email**: Open an issue for security contact discussion
 
 Include the following information:
 - Description of the vulnerability
@@ -328,7 +327,6 @@ npm audit --audit-level high
 - Container security scanning supported
 - SBOM (Software Bill of Materials) available
 - Vulnerability disclosure program
-- Security contact information provided
 
 ## Security Testing
 

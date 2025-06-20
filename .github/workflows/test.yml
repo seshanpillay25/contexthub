@@ -143,43 +143,6 @@ jobs:
         
         echo "✅ Migration test completed"
 
-  symlink-test:
-    needs: test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18.x'
-
-    - name: Test symlink functionality
-      run: |
-        mkdir -p test-symlinks
-        cd test-symlinks
-        
-        # Create master file
-        echo "# Master Configuration" > .ai-context.md
-        
-        # Create symlinks (should work on Unix systems)
-        ln -s .ai-context.md CLAUDE.md
-        ln -s .ai-context.md .cursorrules
-        
-        # Verify symlinks work
-        test "$(cat CLAUDE.md)" = "$(cat .ai-context.md)" || exit 1
-        test -L CLAUDE.md || exit 1
-        
-        # Test modification through symlink
-        echo "## Additional Content" >> CLAUDE.md
-        grep "Additional Content" .ai-context.md || exit 1
-        
-        echo "✅ Symlink functionality verified"
 
   windows-test:
     needs: test

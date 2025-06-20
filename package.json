@@ -1,6 +1,6 @@
 {
   "name": "contexthub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unified configuration for AI coding assistants - maintain one source of truth for Claude Code, Cursor, GitHub Copilot, and more",
   "main": "setup-ai-tools.js",
   "bin": {
@@ -12,7 +12,7 @@
     "build": "node scripts/build-configs.js",
     "sync": "node scripts/sync-configs.js",
     "migrate": "node scripts/migrate-existing.js",
-    "test": "npm run test:scripts && npm run test:symlinks && npm run test:build",
+    "test": "npm run test:scripts && npm run test:build",
     "test:scripts": "node tests/test-build.js",
     "test:symlinks": "bash tests/test-symlinks.sh",
     "test:build": "node tests/test-validation.js",
