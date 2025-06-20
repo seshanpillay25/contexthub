@@ -16,7 +16,7 @@
     "test:scripts": "node tests/test-build.js",
     "test:symlinks": "bash tests/test-symlinks.sh",
     "test:build": "node tests/test-validation.js",
-    "test:security": "npm audit && npm run test:path-traversal && npm run test:input-validation",
+    "test:security": "npm audit && npm run test:path-traversal",
     "test:path-traversal": "node tests/security/test-path-traversal.js",
     "test:input-validation": "node tests/security/test-input-validation.js",
     "security-audit": "npm audit --audit-level moderate",

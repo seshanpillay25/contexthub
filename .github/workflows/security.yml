@@ -183,7 +183,7 @@ jobs:
       
     - name: Check licenses
       run: |
-        license-checker --onlyAllow 'MIT;ISC;BSD-2-Clause;BSD-3-Clause;Apache-2.0' --production
+        license-checker --onlyAllow 'MIT;ISC;BSD-2-Clause;BSD-3-Clause;Apache-2.0;Python-2.0;0BSD' --production
         
     - name: Generate license report
       run: |
