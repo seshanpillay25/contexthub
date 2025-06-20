@@ -1,0 +1,87 @@
+{
+  "name": "contexthub",
+  "version": "1.0.0",
+  "description": "Unified configuration for AI coding assistants - maintain one source of truth for Claude Code, Cursor, GitHub Copilot, and more",
+  "main": "setup-ai-tools.js",
+  "bin": {
+    "contexthub": "./setup-ai-tools.js"
+  },
+  "scripts": {
+    "setup": "node setup-ai-tools.js",
+    "validate": "node scripts/validate-config.js",
+    "build": "node scripts/build-configs.js",
+    "sync": "node scripts/sync-configs.js",
+    "migrate": "node scripts/migrate-existing.js",
+    "test": "npm run test:scripts && npm run test:symlinks && npm run test:build",
+    "test:scripts": "node tests/test-build.js",
+    "test:symlinks": "bash tests/test-symlinks.sh",
+    "test:build": "node tests/test-validation.js",
+    "test:security": "npm audit && npm run test:path-traversal && npm run test:input-validation",
+    "test:path-traversal": "node tests/security/test-path-traversal.js",
+    "test:input-validation": "node tests/security/test-input-validation.js",
+    "security-audit": "npm audit --audit-level moderate",
+    "security-check": "npm run security-audit && npm run test:security",
+    "lint": "eslint scripts/ tests/ --fix",
+    "prepublishOnly": "npm run security-check && npm test",
+    "preversion": "npm run lint",
+    "version": "npm run build && git add -A",
+    "postversion": "git push && git push --tags",
+    "prepare": "node -e \"const fs = require('fs'); const os = require('os'); if (os.platform() !== 'win32') { require('child_process').execSync('chmod +x setup-ai-tools.sh setup-ai-tools.py', {stdio: 'inherit'}); }\""
+  },
+  "keywords": [
+    "ai",
+    "claude",
+    "cursor",
+    "copilot",
+    "codeium",
+    "aider",
+    "continue",
+    "coding-assistant",
+    "configuration",
+    "unified-config",
+    "development-tools",
+    "developer-experience",
+    "automation"
+  ],
+  "author": "ContextHub Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seshanpillay25/contexthub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seshanpillay25/contexthub/issues"
+  },
+  "homepage": "https://github.com/seshanpillay25/contexthub#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "setup-ai-tools.js",
+    "setup-ai-tools.sh",
+    "setup-ai-tools.ps1",
+    "setup-ai-tools.py",
+    "scripts/",
+    "templates/",
+    "examples/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.25.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "chalk": "^4.1.2",
+    "commander": "^9.0.0",
+    "inquirer": "^8.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

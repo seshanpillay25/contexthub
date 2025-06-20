@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
+
+    - name: Run security checks
+      run: npm run security-check
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build package
+      run: |
+        # Ensure all scripts are executable
+        chmod +x setup-ai-tools.sh
+        chmod +x setup-ai-tools.py
+        chmod +x setup-ai-tools.js
+
+    - name: Publish to npm
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        body: |
+          ## What's Changed
+          
+          See the [commit history](https://github.com/seshanpillay25/contexthub/commits/main) for detailed changes.
+          
+          ## Installation
+          
+          ```bash
+          npm install -g contexthub@${{ github.ref_name }}
+          ```
+          
+          ## Quick Start
+          
+          ```bash
+          cd your-project
+          npx contexthub
+          # or if installed globally
+          node setup-ai-tools.js
+          ```
+          
+          ## Documentation
+          
+          - [Getting Started](https://github.com/seshanpillay25/contexthub/blob/main/docs/getting-started.md)
+          - [Tool Compatibility](https://github.com/seshanpillay25/contexthub/blob/main/docs/tool-compatibility.md)
+          - [Troubleshooting](https://github.com/seshanpillay25/contexthub/blob/main/docs/troubleshooting.md)
+        files: |
+          setup-ai-tools.sh
+          setup-ai-tools.ps1
+          setup-ai-tools.py
+        draft: false
+        prerelease: false

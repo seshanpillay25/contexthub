@@ -1,0 +1,83 @@
+# Development files
+tests/
+*.test.js
+*.spec.js
+coverage/
+.nyc_output/
+
+# CI/CD
+.github/
+.travis.yml
+.circleci/
+appveyor.yml
+
+# Documentation source files
+docs/dev/
+docs/drafts/
+*.todo.md
+
+# Examples and templates source
+examples/*.md
+templates/*.md
+
+# Config files
+.eslintrc*
+.prettierrc*
+.editorconfig
+.gitattributes
+tsconfig.json
+jest.config.js
+
+# Security test files
+tests/security/
+
+# Development scripts
+scripts/dev/
+scripts/test/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+*.tgz
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Git files
+.git/
+.gitignore
+
+# Other
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
+.github/FUNDING.yml
+assets/
