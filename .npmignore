@@ -76,8 +76,5 @@ temp/
 .gitignore
 
 # Other
-CONTRIBUTING.md
-CODE_OF_CONDUCT.md
 SECURITY.md
-.github/FUNDING.yml
 assets/
