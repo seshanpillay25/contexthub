@@ -58,7 +58,7 @@ jobs:
         echo "Test project for ContextHub" >> .ai-context.md
         
         # Test build command
-        node scripts/build-configs.js --source .ai-context.md --dry-run
+        node scripts/build-configs.js --source .ai-context.md
 
     - name: Test validation
       run: |
