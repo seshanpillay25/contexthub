@@ -420,6 +420,195 @@ This will only generate configuration files for the specified tools, leaving you
 
 </details>
 
+## ✨ Enhanced Features
+
+### 🔍 **Smart AI Tool Detection**
+Automatically detects installed AI coding assistants and provides intelligent setup recommendations.
+
+```bash
+# Detect all AI tools on your system
+npm run detect
+
+# Setup with automatic detection and interactive selection
+contexthub
+
+# Detect-only mode (no setup)
+contexthub --detect-only
+```
+
+**Detection Capabilities:**
+- 🔌 **VS Code Extensions**: Scans installed VS Code extensions
+- 💻 **System Executables**: Checks for AI tool executables in PATH
+- 📁 **Project Configs**: Finds existing configuration files
+- 📦 **Package Dependencies**: Analyzes package.json for AI-related dependencies
+- 🔧 **Git Configurations**: Detects GitHub Copilot integration
+
+### 🎯 **Interactive Configuration Wizard**
+Smart setup process with multiple modes for different user preferences.
+
+#### Setup Mode Options
+
+**🧠 Smart Mode (Default)**
+- Uses AI tool detection to pre-select recommended tools
+- Shows confidence levels for each detected tool
+- Allows customization of recommendations
+- Best for most users
+
+**👤 Manual Mode**
+- Complete manual control over tool selection
+- No detection influence on recommendations
+- Clean interface with tool descriptions
+- Perfect for specific requirements
+
+**🔍 Detection-Only Mode**
+- Shows what tools are detected without setup
+- Great for understanding your current environment
+- Can run setup later with informed decisions
+
+```bash
+# Default interactive setup
+contexthub
+
+# Force manual mode (skip detection influence)
+contexthub --manual
+
+# Force smart mode (always use detection)
+contexthub --smart
+
+# Detection only (no setup)
+contexthub --detect-only
+```
+
+### 👁️ **Live File Watcher & Auto-Sync**
+Automatically syncs changes from `.ai-context.md` to all tool-specific configs.
+
+```bash
+# Start file watcher (runs continuously)
+npm run watch
+
+# One-time sync without watching
+npm run sync-once
+
+# Manual sync (for file copy strategy)
+npm run sync
+```
+
+**Watcher Features:**
+- ⚡ **Real-time sync** with debounced updates (500ms)
+- 🔗 **Smart symlink detection** (skips syncing symlinked files)
+- 🛠️ **Tool-specific filtering** (processes AI:TOOL sections)
+- 📊 **Session statistics** and error reporting
+- 🎯 **Selective syncing** (only syncs configured tools)
+
+### 🔍 **Configuration Validation & Linting**
+Comprehensive validation system that ensures your AI configurations follow best practices.
+
+```bash
+# Validate configuration
+npm run lint
+
+# Validate and auto-fix issues
+npm run lint-fix
+
+# Strict validation mode
+npm run lint -- --strict
+
+# JSON output for CI/CD
+npm run lint -- --json
+```
+
+**Validation Rules:**
+- 📋 **Structure validation**: Required sections, proper headings
+- 📝 **Content quality**: Empty sections, placeholder detection
+- 🔧 **Tool sections**: Malformed AI:TOOL tags, consistency
+- 🔄 **Sync consistency**: File sync status, symlink validation
+- 🏆 **Best practices**: Framework-specific guidelines
+- 🔒 **Security checks**: Sensitive data detection, security guidelines
+
+## 🎛️ Manual Control Options
+
+### Interactive Setup Modes
+
+```bash
+# Default Interactive Setup
+contexthub
+# Offers choice between Smart/Manual/Detection-Only modes
+
+# Force Specific Mode
+contexthub --manual    # Skip detection influence
+contexthub --smart     # Always use detection
+contexthub --detect-only # Detection only, no setup
+```
+
+#### Smart Mode Features
+When you choose smart mode, you get:
+- ✅ **High confidence tools** (pre-selected, recommended)
+- 🔍 **Suggested tools** (pre-selected, some evidence)
+- 💡 **Optional tools** (not pre-selected, minimal evidence)
+- **Undetected tools** (not pre-selected, available to add)
+
+#### Manual Mode Features
+When you choose manual mode, you get:
+- Clean tool list with descriptions
+- No detection bias or pre-selection
+- Confirmation summary before proceeding
+- Option to cancel and restart
+
+### Non-Interactive Options
+
+```bash
+# Setup specific tools without interaction
+contexthub --no-interactive --tools claude,cursor,copilot
+
+# Quick setups
+contexthub --no-interactive --tools claude
+contexthub --no-interactive --tools claude,cursor,copilot
+
+# Mode + Non-Interactive
+contexthub --manual --no-interactive
+contexthub --smart --no-interactive --tools claude,cursor
+```
+
+### Discovery & Analysis Commands
+
+```bash
+# See all available tools with descriptions
+contexthub --list-tools
+
+# Standalone detection without setup
+contexthub --detect-only
+npm run detect
+
+# Check existing setup
+contexthub --verify
+
+# Validate configuration file
+npm run lint
+
+# Get usage examples
+contexthub --examples
+```
+
+### Advanced Customization
+
+```bash
+# Use file copying instead of symlinks
+contexthub --no-symlinks
+
+# Work in specific directory
+contexthub --working-dir /path/to/project
+
+# Force overwrite existing files
+contexthub --force
+
+# Verbose output for debugging
+contexthub --verbose
+
+# Combining options
+contexthub --manual --force --verbose
+contexthub --smart --tools claude,cursor --no-symlinks
+```
+
 ## 🛠️ Advanced Usage
 
 ### Adding AI Tools Incrementally
@@ -428,36 +617,16 @@ Start with a few tools and add more as needed:
 
 #### Starting Setup
 ```bash
-# Initial setup with just Cursor and Copilot
-npm run setup
-# Choose only Cursor and Copilot during interactive setup
+# Initial setup with smart recommendations
+contexthub
+# Choose only the tools you want during interactive setup
 ```
 
-Your project now has:
-```
-your-project/
-├── .ai-context.md                    # Master configuration
-├── .cursorrules                      # Cursor config
-└── .github/copilot-instructions.md   # Copilot config
-```
-
-#### Adding Claude Later
+#### Adding Tools Later
 ```bash
 # Add Claude without affecting existing tools
 npm run build -- --tools claude
-```
 
-Now you have:
-```
-your-project/
-├── .ai-context.md                    # Master configuration  
-├── .cursorrules                      # Cursor config (unchanged)
-├── .github/copilot-instructions.md   # Copilot config (unchanged)
-└── CLAUDE.md                         # Claude config (new!)
-```
-
-#### Adding Multiple Tools
-```bash
 # Add multiple tools at once
 npm run build -- --tools aider,continue,codeium
 
@@ -468,6 +637,7 @@ npm run build -- --force  # Generates all supported tools
 #### Available Commands
 ```bash
 # List all available tools
+contexthub --list-tools
 npm run build -- --list-tools
 
 # Preview what would be generated (dry run)
@@ -480,18 +650,6 @@ npm run build -- --tools claude --force
 npm run build -- --tools claude --verbose
 ```
 
-#### Tool Selection Strategy
-```bash
-# Minimal setup (choose 1-2 primary tools)
-npm run build -- --tools claude,cursor
-
-# Full IDE setup (all tools for comprehensive coverage)  
-npm run build -- --force
-
-# Team setup (standardize on specific tools)
-npm run build -- --tools claude,copilot,cursor
-```
-
 ### Cross-Platform Support
 
 ```bash
@@ -501,17 +659,33 @@ npm run build -- --tools claude,copilot,cursor
 python3 setup-ai-tools.py # Universal Python
 ```
 
-### Advanced Configuration
+### Common Use Cases
 
+#### First-time User
 ```bash
-# Force file copying instead of symlinks
-contexthub --no-symlinks
+# Guided interactive setup
+contexthub
+# Choose "Smart Setup" → Customize selections → Confirm
+```
 
-# Verbose output for debugging
-contexthub --verbose
+#### Experienced User with Specific Needs
+```bash
+# Quick manual setup
+contexthub --manual --tools claude,cursor --force
+```
 
-# Setup in specific directory
-contexthub --working-dir /path/to/project
+#### Team Lead Setting Standards
+```bash
+# Detect what's available, then standardize
+contexthub --detect-only
+contexthub --no-interactive --tools claude,copilot
+```
+
+#### CI/CD Pipeline
+```bash
+# Automated setup with validation
+contexthub --no-interactive --tools claude --no-symlinks
+npm run lint --json
 ```
 
 ## 📊 Comparison

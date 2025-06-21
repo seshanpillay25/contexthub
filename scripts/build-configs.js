@@ -94,11 +94,11 @@ class ConfigBuilder {
     if (path.isAbsolute(inputPath)) {
       const cwd = path.resolve(process.cwd());
       const resolvedPath = path.resolve(inputPath);
-      
+
       if (!resolvedPath.startsWith(cwd + path.sep) && resolvedPath !== cwd) {
         throw new Error('Invalid path: absolute paths outside project directory are not allowed');
       }
-      
+
       return inputPath; // Allow absolute paths within project directory
     }
 
