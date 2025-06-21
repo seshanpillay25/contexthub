@@ -51,10 +51,33 @@ jobs:
 
     - name: Test build process
       run: |
-        # Create test configuration
-        echo "# Test Configuration" > .ai-context.md
-        echo "## Project Overview" >> .ai-context.md
-        echo "Test project for ContextHub" >> .ai-context.md
+        # Create test configuration that meets validation requirements
+        cat > .ai-context.md << 'EOF'
+        # Test Project - AI Context Configuration
+
+        ## Project Overview
+        This is a comprehensive test project for ContextHub functionality. It includes all the required sections to pass validation and demonstrates the complete configuration structure.
+
+        ## Architecture
+        - **Frontend:** Test framework with component structure
+        - **Backend:** Node.js application with modular design
+        - **Database:** Mock data layer for testing
+        - **Testing:** Comprehensive test suite validation
+
+        ## Coding Standards
+        - Use consistent formatting and linting
+        - Follow best practices for maintainability
+        - Implement proper error handling
+        - Write comprehensive tests for all functionality
+
+        <!-- AI:CLAUDE -->
+        Focus on test coverage and code quality validation.
+        <!-- /AI:CLAUDE -->
+
+        <!-- AI:CURSOR -->
+        Provide helpful autocomplete for test scenarios.
+        <!-- /AI:CURSOR -->
+        EOF
         
         # Test build command (without --source to use findSourceFile)
         node scripts/build-configs.js
