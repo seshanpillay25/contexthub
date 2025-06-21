@@ -52,12 +52,8 @@ const AIDER_TEMPLATE = {
 
 class ConfigBuilder {
   constructor(options = {}) {
-    // Handle source file path - allow absolute paths from findSourceFile() but validate user-provided paths
-    if (options.source) {
-      this.sourceFile = this.validateAndSanitizePath(options.source);
-    } else {
-      this.sourceFile = this.findSourceFile(); // This can return absolute paths
-    }
+    // Validate and sanitize source file path
+    this.sourceFile = options.source ? this.validateAndSanitizePath(options.source) : this.findSourceFile();
     // Validate and sanitize output directory path
     this.outputDir = options.output ? this.validateAndSanitizePath(options.output) : process.cwd();
     this.tools = options.tools || Object.keys(TOOL_CONFIGS);
@@ -88,21 +84,26 @@ class ConfigBuilder {
       throw new Error('Invalid path: null bytes are not allowed');
     }
 
-    // Reject absolute paths for security
-    if (path.isAbsolute(inputPath)) {
-      throw new Error('Invalid path: absolute paths are not allowed for security reasons');
-    }
-
     // Reject URL schemes (but allow Windows drive letters like C:)
     if (/^[a-z][a-z0-9+.-]*:/i.test(inputPath) &&
         !/^[a-z]:[\\//]/i.test(inputPath)) {
       throw new Error('Invalid path: URL schemes are not allowed');
     }
 
-    // Normalize the path to resolve any .. or . components
-    const normalizedPath = path.normalize(inputPath);
+    // For absolute paths, check if they're within the current working directory
+    if (path.isAbsolute(inputPath)) {
+      const cwd = path.resolve(process.cwd());
+      const resolvedPath = path.resolve(inputPath);
+      
+      if (!resolvedPath.startsWith(cwd + path.sep) && resolvedPath !== cwd) {
+        throw new Error('Invalid path: absolute paths outside project directory are not allowed');
+      }
+      
+      return inputPath; // Allow absolute paths within project directory
+    }
 
-    // Ensure the normalized path doesn't escape the current working directory
+    // For relative paths, normalize and check for directory traversal
+    const normalizedPath = path.normalize(inputPath);
     const resolvedPath = path.resolve(process.cwd(), normalizedPath);
     const cwd = path.resolve(process.cwd());
 
