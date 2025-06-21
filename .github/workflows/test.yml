@@ -35,7 +35,10 @@ jobs:
     - name: Test setup scripts
       shell: bash
       run: |
-        # Test Node.js setup script
+        # Test Node.js setup script help and version commands
+        node setup-ai-tools.js --help
+        node setup-ai-tools.js --version
+        node setup-ai-tools.js --list-tools
         node setup-ai-tools.js --verify || echo "No existing setup to verify"
         
         # Test cross-platform setup
@@ -85,7 +88,7 @@ jobs:
     - name: Test validation
       run: |
         # Test validation script
-        node scripts/validate-config.js --config .ai-context.md
+        node scripts/config-validator.js
 
   integration-test:
     needs: test
@@ -117,13 +120,14 @@ jobs:
       run: |
         cd test-project
         
-        # Run setup
-        node "${{ github.workspace }}/setup-ai-tools.js"
+        # Run setup in non-interactive mode with specific tools
+        node "${{ github.workspace }}/setup-ai-tools.js" --no-interactive --tools claude,cursor,copilot,aider
         
         # Verify files were created
         test -f .ai-context.md || exit 1
         test -f CLAUDE.md || exit 1
         test -f .cursorrules || exit 1
+        test -f .github/copilot-instructions.md || exit 1
         test -f .aider.conf.yml || exit 1
         
         echo "✅ All configuration files created successfully"
@@ -148,7 +152,7 @@ jobs:
         node ../scripts/build-configs.js
         
         # Test validation
-        node ../scripts/validate-config.js
+        node ../scripts/config-validator.js
         
         echo "✅ Build and validation completed successfully"
 
