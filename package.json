@@ -48,8 +48,7 @@
     "developer-experience",
     "automation"
   ],
-  "author": "ContextHub Team",
-  "license": "MIT",
+  "author": "Seshan Pillay",
   "repository": {
     "type": "git",
     "url": "https://github.com/seshanpillay25/contexthub.git"
@@ -70,8 +69,7 @@
     "templates/",
     "examples/",
     "docs/",
-    "README.md",
-    "LICENSE"
+    "README.md"
   ],
   "devDependencies": {
     "eslint": "^8.0.0",
