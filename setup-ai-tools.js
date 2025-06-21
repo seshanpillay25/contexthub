@@ -1157,7 +1157,7 @@ program.action(async (options) => {
       useSymlinks: options.symlinks,
       force: options.force,
       verbose: options.verbose,
-      interactive: !options.noInteractive,
+      interactive: options.interactive,
       tools: selectedTools,
       setupMode: setupMode
     });
