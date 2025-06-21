@@ -396,14 +396,14 @@ const testFileSizeValidation = async () => {
     // Only fail if there are severe structural errors
     const severeErrors = validator.issues.filter(
       issue => issue.severity === SEVERITY.ERROR &&
-      issue.message.toLowerCase().includes('syntax') ||
-      issue.message.toLowerCase().includes('parse')
+      (issue.message.toLowerCase().includes('syntax') ||
+      issue.message.toLowerCase().includes('parse'))
     );
 
     if (severeErrors.length > 0) {
       throw new Error('Large file has severe parsing errors');
     }
-    
+
     // If only size/structure warnings, that's acceptable
     logInfo('Large file validation completed with warnings (acceptable)');
   }

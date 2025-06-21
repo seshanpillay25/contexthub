@@ -44,8 +44,6 @@ jobs:
       uses: trufflesecurity/trufflehog@main
       with:
         path: ./
-        base: ${{ github.event.repository.default_branch }}
-        head: HEAD
         extra_args: --debug --only-verified
         
     - name: Run CodeQL Analysis
@@ -104,29 +102,30 @@ jobs:
   #       sarif_file: ${{ steps.ossar.outputs.sarifFile }}
   # Note: OSSAR is deprecated and often causes CI failures
         
-  security-scorecard:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      id-token: write
-      
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        persist-credentials: false
-        
-    - name: Run analysis
-      uses: ossf/scorecard-action@v2.4.0
-      with:
-        results_file: results.sarif
-        results_format: sarif
-        publish_results: false
-        
-    - name: Upload results
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: results.sarif
+  # security-scorecard:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     security-events: write
+  #     id-token: write
+  #     
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #     with:
+  #       persist-credentials: false
+  #       
+  #   - name: Run analysis
+  #     uses: ossf/scorecard-action@v2.4.0
+  #     with:
+  #       results_file: results.sarif
+  #       results_format: sarif
+  #       publish_results: false
+  #       
+  #   - name: Upload results
+  #     uses: github/codeql-action/upload-sarif@v3
+  #     with:
+  #       sarif_file: results.sarif
+  # Note: Security scorecard is disabled due to Git authentication issues
         
   security-policy-check:
     runs-on: ubuntu-latest
@@ -197,7 +196,7 @@ jobs:
 
   security-summary:
     runs-on: ubuntu-latest
-    needs: [security-audit, dependency-review, security-scorecard, security-policy-check, license-check]
+    needs: [security-audit, dependency-review, security-policy-check, license-check]
     if: always()
     
     steps:
@@ -209,7 +208,6 @@ jobs:
         echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
         echo "| Security Audit | ${{ needs.security-audit.result }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Dependency Review | ${{ needs.dependency-review.result }} |" >> $GITHUB_STEP_SUMMARY
-        echo "| Security Scorecard | ${{ needs.security-scorecard.result }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Security Policy | ${{ needs.security-policy-check.result }} |" >> $GITHUB_STEP_SUMMARY
         echo "| License Check | ${{ needs.license-check.result }} |" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY

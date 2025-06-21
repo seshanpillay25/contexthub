@@ -90,8 +90,8 @@ class ConfigBuilder {
     }
 
     // Reject URL schemes (but allow Windows drive letters like C:)
-    if (/^[a-z][a-z0-9+.-]*:/i.test(inputPath) && 
-        !/^[a-z]:[\\\/]/i.test(inputPath)) {
+    if (/^[a-z][a-z0-9+.-]*:/i.test(inputPath) &&
+        !/^[a-z]:[\\//]/i.test(inputPath)) {
       throw new Error('Invalid path: URL schemes are not allowed');
     }
 
