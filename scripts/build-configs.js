@@ -52,8 +52,12 @@ const AIDER_TEMPLATE = {
 
 class ConfigBuilder {
   constructor(options = {}) {
-    // Validate and sanitize source file path
-    this.sourceFile = options.source ? this.validateAndSanitizePath(options.source) : this.findSourceFile();
+    // Handle source file path - allow absolute paths from findSourceFile() but validate user-provided paths
+    if (options.source) {
+      this.sourceFile = this.validateAndSanitizePath(options.source);
+    } else {
+      this.sourceFile = this.findSourceFile(); // This can return absolute paths
+    }
     // Validate and sanitize output directory path
     this.outputDir = options.output ? this.validateAndSanitizePath(options.output) : process.cwd();
     this.tools = options.tools || Object.keys(TOOL_CONFIGS);
