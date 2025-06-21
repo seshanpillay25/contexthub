@@ -54,6 +54,29 @@ jobs:
         chmod +x setup-ai-tools.py
         chmod +x setup-ai-tools.js
 
+    - name: Get previous tag
+      id: prev_tag
+      run: |
+        PREV_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+        echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+        echo "Previous tag: $PREV_TAG"
+
+    - name: Get commits since last tag
+      id: commits
+      run: |
+        if [ -n "${{ steps.prev_tag.outputs.prev_tag }}" ]; then
+          COMMITS=$(git log --pretty=format:"- %s (%h)" ${{ steps.prev_tag.outputs.prev_tag }}..HEAD)
+        else
+          COMMITS=$(git log --pretty=format:"- %s (%h)" --max-count=10)
+        fi
+        
+        # Handle multiline output for GitHub Actions
+        {
+          echo "commits<<EOF"
+          echo "$COMMITS"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
+
     - name: Publish to npm
       run: npm publish
       env:
@@ -69,7 +92,7 @@ jobs:
         body: |
           ## What's Changed
           
-          See the [commit history](https://github.com/seshanpillay25/contexthub/commits/main) for detailed changes.
+          ${{ steps.commits.outputs.commits }}
           
           ## Installation
           
@@ -83,14 +106,17 @@ jobs:
           cd your-project
           npx contexthub
           # or if installed globally
-          node setup-ai-tools.js
+          contexthub
           ```
           
           ## Documentation
           
-          - [Getting Started](https://github.com/seshanpillay25/contexthub/blob/main/docs/getting-started.md)
-          - [Tool Compatibility](https://github.com/seshanpillay25/contexthub/blob/main/docs/tool-compatibility.md)
-          - [Troubleshooting](https://github.com/seshanpillay25/contexthub/blob/main/docs/troubleshooting.md)
+          - [Getting Started](https://github.com/seshanpillay25/contexthub/blob/main/README.md#quick-start)
+          - [Security Policy](https://github.com/seshanpillay25/contexthub/blob/main/SECURITY.md)
+          
+          ## Download Setup Scripts
+          
+          Alternative installation methods are available as release assets below.
         files: |
           setup-ai-tools.sh
           setup-ai-tools.ps1
