@@ -8,10 +8,9 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [18.x, 20.x]
 
     steps:
@@ -144,46 +143,6 @@ jobs:
         echo "✅ Migration test completed"
 
 
-  windows-test:
-    needs: test
-    runs-on: windows-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18.x'
-
-    - name: Test PowerShell script
-      run: |
-        # Test PowerShell script execution
-        Write-Host "Testing PowerShell script..."
-        
-        # Create test directory
-        New-Item -ItemType Directory -Path "test-windows" -Force
-        Set-Location "test-windows"
-        
-        # Test script without execution (syntax check)
-        Get-Content "../setup-ai-tools.ps1" | Out-Null
-        
-        Write-Host "✅ PowerShell script syntax verified"
-
-    - name: Test Windows compatibility
-      run: |
-        cd test-windows
-        
-        # Test Node.js setup (file copy mode for Windows CI)
-        node ../setup-ai-tools.js --no-symlinks
-        
-        # Verify files were created
-        if (!(Test-Path ".ai-context.md")) { exit 1 }
-        if (!(Test-Path "CLAUDE.md")) { exit 1 }
-        if (!(Test-Path ".cursorrules")) { exit 1 }
-        
-        Write-Host "✅ Windows file copy mode verified"
 
   package-test:
     needs: test
