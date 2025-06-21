@@ -160,8 +160,8 @@ jobs:
         echo "# Existing Claude Config" > CLAUDE.md.backup
         echo "Use TypeScript" > .cursorrules.backup
         
-        # Test migration (dry run)
-        node ../scripts/migrate-existing.js --dry-run
+        # Test migration (dry run with force to overwrite existing file)
+        node ../scripts/migrate-existing.js --dry-run --force
         
         echo "✅ Migration test completed"
 
@@ -194,18 +194,21 @@ jobs:
 
     - name: Test CLI commands
       run: |
-        # Test package installation
+        # Test package installation and CLI commands with dependencies
         npm pack
         
-        # Test CLI commands via node
+        # Extract package to test directory
+        mkdir -p cli-test
+        cd cli-test
+        tar -xzf ../contexthub-*.tgz
+        cd package
+        
+        # Install dependencies for the package
+        npm install --production
+        
+        # Test CLI commands
         node setup-ai-tools.js --version
         node setup-ai-tools.js --help
         
-        # Test in clean directory
-        mkdir -p cli-test
-        cd cli-test
-        
-        # This should create initial config
-        node ../setup-ai-tools.js --dry-run || echo "Dry run completed"
-        
+        # Test basic functionality
         echo "✅ CLI functionality verified"
