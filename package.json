@@ -1,6 +1,6 @@
 {
   "name": "contexthub",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Unified configuration for AI coding assistants - maintain one source of truth for Claude Code, Cursor, GitHub Copilot, and more",
   "main": "setup-ai-tools.js",
   "bin": {
